@@ -13,6 +13,7 @@
               class="px-4 py-3 rounded-lg border border-gray-100 mt-1"
               placeholder="iMoney"
               id="fullName"
+              v-model="fullName"
             />
           </label>
         </div>
@@ -24,6 +25,7 @@
               class="px-4 py-3 rounded-lg border border-gray-100 mt-1"
               placeholder="example@gmail.com"
               id="email"
+              v-model="email"
             />
           </label>
         </div>
@@ -35,6 +37,7 @@
               class="px-4 py-3 rounded-lg border border-gray-100 mt-1"
               id="password"
               autocomplete="current-password"
+              v-model="password"
             />
           </label>
         </div>
@@ -62,10 +65,17 @@
 </template>
 
 <script>
+import { ref } from "vue";
 export default {
   setup() {
-    function onSubmit() {}
-    return { onSubmit };
+    const fullName = ref("");
+    const email = ref("");
+    const password = ref("");
+
+    function onSubmit() {
+      console.log({ fullName, email, password });
+    }
+    return { fullName, email, password, onSubmit };
   },
 };
 </script>
