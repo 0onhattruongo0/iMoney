@@ -21,7 +21,7 @@
     </div>
   </div>
   <!-- Start: Menu -->
-  <div class="row">
+  <div class="row mb-24">
     <div class="container mx-auto px-8">
       <div class="grid grid-cols-1">
         <div class="col-span-1">
