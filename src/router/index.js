@@ -1,19 +1,18 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { projectAuth } from "@/configs/firebase";
-
 const requireAuth = (to, from, next) => {
   const user = projectAuth.currentUser;
   if (!user) next({ name: "login", params: {} });
   else next();
 };
-
 const routes = [
   {
     path: "/",
     name: "home",
     meta: {
-      text: "Home",
+      text: "name",
       leading: true,
+      isShowFooter: true,
     },
     component: () =>
       import(/* webpackChunkName: "home" */ "../views/index.vue"),
@@ -45,6 +44,7 @@ const routes = [
     meta: {
       text: "Profile",
       leading: false,
+      isShowFooter: true,
     },
     component: () =>
       import(/* webpackChunkName: "profile" */ "../views/profile.vue"),
@@ -54,8 +54,9 @@ const routes = [
     path: "/report",
     name: "report",
     meta: {
-      text: "report",
-      leading: true,
+      text: "Report",
+      leading: false,
+      isShowFooter: true,
     },
     component: () =>
       import(/* webpackChunkName: "report" */ "../views/report.vue"),
@@ -65,8 +66,9 @@ const routes = [
     path: "/budget",
     name: "budget",
     meta: {
-      text: "budget",
-      leading: true,
+      text: "Budget",
+      leading: false,
+      isShowFooter: true,
     },
     component: () =>
       import(/* webpackChunkName: "budget" */ "../views/budget.vue"),
@@ -76,8 +78,9 @@ const routes = [
     path: "/transaction",
     name: "transaction",
     meta: {
-      text: "transaction",
-      leading: true,
+      text: "New Transaction",
+      leading: false,
+      isShowFooter: false,
     },
     component: () =>
       import(
