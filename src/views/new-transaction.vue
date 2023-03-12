@@ -19,6 +19,7 @@
                   type="text"
                   placeholder="0"
                   id="total"
+                  v-model="total"
                 />
               </div>
             </label>
@@ -38,6 +39,7 @@
                   type="text"
                   placeholder="Select a category"
                   id="category"
+                  v-model="category"
                 />
               </div>
             </label>
@@ -55,19 +57,20 @@
                   type="text"
                   placeholder="Note"
                   id="note"
+                  v-model="note"
                 />
               </div>
             </label>
           </div>
           <div class="row">
-            <label for="createdAt" class="flex items-center">
+            <label for="time" class="flex items-center">
               <div class="flex-none w-10 mr-4">
                 <span class="flex items-center justify-end text-dark">
                   <i class="t2ico t2ico-calendar text-2xl"></i>
                 </span>
               </div>
               <div class="flex-1 border-b border-gray-100 py-3">
-                <div class="text-dark w-full">Sun, 29 Dec 2021</div>
+                <div class="text-dark w-full">{{ new Date() }}</div>
               </div>
             </label>
           </div>
@@ -112,6 +115,7 @@
                     type="text"
                     placeholder="Select a location"
                     id="location"
+                    v-model="location"
                   />
                 </div>
               </label>
@@ -129,6 +133,7 @@
                     type="text"
                     placeholder="With person"
                     id="withperson"
+                    v-model="person"
                   />
                 </div>
               </label>
@@ -136,23 +141,103 @@
           </div>
         </div>
       </div>
+      <div class="row mt-8">
+        <div class="bg-white round-lg py-4">
+          <div class="container mx-auto px-8">
+            <div class="row">
+              <label for="file" class="flex items-center">
+                <div class="flex-none w-10 mr-4">
+                  <span class="flex items-center justify-end">
+                    <i class="t2ico t2ico-camera text-2xl"></i>
+                  </span>
+                </div>
+                <div class="flex-1py-2">
+                  <div class="w-full text-primary font-semibold">
+                    Upload File
+                  </div>
+                  <input
+                    id="file"
+                    type="file"
+                    class="w-0 h-0 overflow-hidden absolute"
+                    @change="onChangeFile"
+                  />
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="text-red my-3">{{ errorFile }}</div>
+      </div>
     </div>
+    <button type="submmit">Test</button>
   </form>
 </template>
 
 <script>
 import { ref } from "vue";
+import { useUser } from "@/composables/useUser";
+import useCollection from "@/composables/useCollection";
+import useStorage from "@/composables/useStogare";
 export default {
   setup() {
     const isMoreDetails = ref(false);
+    const { getUser } = useUser();
+    const { error, addRecord } = useCollection("transaction");
+    const { uploadFile, url } = useStorage("transaction");
+
+    const total = ref(0);
+    const category = ref("");
+    const note = ref("");
+    const location = ref("");
+    const person = ref("");
+    const time = ref(new Date());
+    const file = ref(null);
+    const errorFile = ref(null);
     function showDetails() {
       isMoreDetails.value = true;
     }
-    function onSubmit() {}
+    function onChangeFile(e) {
+      const selected = e.target.files[0];
+      const tylesFile = ["image/png", "image/jpeg"];
+      if (selected && tylesFile.includes(selected.type)) {
+        file.value = selected;
+      } else {
+        file.value = null;
+        errorFile.value = "Please select a file type png or jpg";
+      }
+    }
+    async function onSubmit() {
+      if (file.value) await uploadFile(file.value);
+      console.log(file.value);
+      console.log(url);
+      const { user } = getUser();
+      const transaction = {
+        total: total.value,
+        category: category.value,
+        note: note.value,
+        location: location.value,
+        person: person.value,
+        time: time.value,
+        userId: user.value.uid,
+        thumbnail: url,
+      };
+      console.log(transaction);
+      await addRecord(transaction);
+      console.log(error);
+      // console.log("Created");
+    }
     return {
+      total,
+      category,
+      note,
+      time,
       onSubmit,
       isMoreDetails,
       showDetails,
+      onChangeFile,
+      errorFile,
+      location,
+      person,
     };
   },
 };

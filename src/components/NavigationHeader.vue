@@ -14,8 +14,11 @@
               alt="User's Profile Avatar"
             />
           </div>
-          <h1 class="text-xl font-bold text-dark ml-2">
-            {{ meta.text === "name" ? user.displayName : meta.text }}
+          <h1 class="text-xl font-bold text-dark ml-2" v-if="user">
+            {{ user.displayName }}
+          </h1>
+          <h1 class="text-xl font-bold text-dark ml-2" v-else>
+            {{ meta.text }}
           </h1>
         </div>
         <div class="flex">
